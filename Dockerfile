@@ -1,18 +1,10 @@
-# Android development environment for ubuntu.
-# version 0.0.5
-
 FROM ubuntu
 
-MAINTAINER tracer0tong <yuriy.leonychev@gmail.com>
-
 # Expose ADB, ADB control and VNC ports
-EXPOSE 22
 EXPOSE 5037
 EXPOSE 5554
 EXPOSE 5555
 EXPOSE 5900
-EXPOSE 80
-EXPOSE 443
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN echo "debconf shared/accepted-oracle-license-v1-1 select true" | debconf-set-selections && \
@@ -50,6 +42,8 @@ RUN mkdir /usr/local/android-sdk/tools/keymaps && \
     touch /usr/local/android-sdk/tools/keymaps/en-us
 
 ENV NOTVISIBLE "in users profile"
+ENV ANDROID_PLATFORM "android-19"
+ENV ANDROID_ARCH "x86"
 
 # Add entrypoint
 ADD entrypoint.sh /entrypoint.sh
