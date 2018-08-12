@@ -5,9 +5,6 @@ FROM ubuntu
 
 MAINTAINER tracer0tong <yuriy.leonychev@gmail.com>
 
-# Specially for SSH access and port redirection
-ENV ROOTPASSWORD android
-
 # Expose ADB, ADB control and VNC ports
 EXPOSE 22
 EXPOSE 5037
@@ -23,10 +20,10 @@ RUN echo "debconf shared/accepted-oracle-license-v1-1 select true" | debconf-set
 
 # Update packages
 RUN apt-get -y update && \
-    apt-get -y install software-properties-common bzip2 ssh net-tools openssh-server socat curl && \
+    apt-get -y --no-install-recommends install software-properties-common bzip2 net-tools socat curl && \
     add-apt-repository ppa:webupd8team/java && \
-    apt-get update && \
-    apt-get -y install oracle-java8-installer && \
+    apt-get update -y && \
+    apt-get -y --no-install-recommends install oracle-java8-installer && \
     rm -rf /var/lib/apt/lists/*
 
 # Install android sdk
@@ -45,19 +42,12 @@ ENV JAVA_HOME /usr/lib/jvm/java-7-oracle
 
 # Install latest android tools and system images
 RUN ( sleep 4 && while [ 1 ]; do sleep 1; echo y; done ) | android update sdk --no-ui --force -a --filter \
-    platform-tool,android-19,android-21,android-22,build-tools-22.0.1,sys-img-x86-android-19,sys-img-x86-android-21,sys-img-x86-android-22,sys-img-armeabi-v7a-android-19,sys-img-armeabi-v7a-android-21,sys-img-armeabi-v7a-android-22 && \
+    platform-tool,android-19,sys-img-x86-android-19 && \
     echo "y" | android update adb
 
 # Create fake keymap file
 RUN mkdir /usr/local/android-sdk/tools/keymaps && \
     touch /usr/local/android-sdk/tools/keymaps/en-us
-
-# Run sshd
-RUN mkdir /var/run/sshd && \
-    echo "root:$ROOTPASSWORD" | chpasswd && \
-    sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
-    sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd && \
-    echo "export VISIBLE=now" >> /etc/profile
 
 ENV NOTVISIBLE "in users profile"
 
