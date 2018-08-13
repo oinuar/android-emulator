@@ -12,7 +12,7 @@ RUN echo "debconf shared/accepted-oracle-license-v1-1 select true" | debconf-set
 
 # Update packages
 RUN apt-get -y update && \
-    apt-get -y --no-install-recommends install software-properties-common bzip2 net-tools socat curl && \
+    apt-get -y --no-install-recommends install software-properties-common bzip2 net-tools socat && \
     add-apt-repository ppa:webupd8team/java && \
     apt-get update -y && \
     apt-get -y --no-install-recommends install oracle-java8-installer && \
