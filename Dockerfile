@@ -34,7 +34,7 @@ ENV JAVA_HOME /usr/lib/jvm/java-7-oracle
 
 # Install latest android tools and system images
 RUN ( sleep 4 && while [ 1 ]; do sleep 1; echo y; done ) | android update sdk --no-ui --force -a --filter \
-    platform-tool,android-19,sys-img-x86-android-19 && \
+    platform-tool,android-26,sys-img-x86-android-26 && \
     echo "y" | android update adb
 
 # Create fake keymap file
@@ -42,7 +42,7 @@ RUN mkdir /usr/local/android-sdk/tools/keymaps && \
     touch /usr/local/android-sdk/tools/keymaps/en-us
 
 ENV NOTVISIBLE "in users profile"
-ENV ANDROID_PLATFORM "android-19"
+ENV ANDROID_PLATFORM "android-26"
 ENV ANDROID_ARCH "x86"
 
 # Add entrypoint
