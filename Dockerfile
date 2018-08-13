@@ -30,11 +30,14 @@ ENV PATH $PATH:$ANDROID_HOME/tools
 ENV PATH $PATH:$ANDROID_HOME/platform-tools
 
 # Export JAVA_HOME variable
-ENV JAVA_HOME /usr/lib/jvm/java-7-oracle
+ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
+
+ENV ANDROID_PLATFORM "android-19"
+ENV ANDROID_ARCH "x86"
 
 # Install latest android tools and system images
 RUN ( sleep 4 && while [ 1 ]; do sleep 1; echo y; done ) | android update sdk --no-ui --force -a --filter \
-    platform-tool,android-19,sys-img-x86-android-19 && \
+    "platform-tool,${ANDROID_PLATFORM},sys-img-${ANDROID_ARCH}-${ANDROID_PLATFORM}" && \
     echo "y" | android update adb
 
 # Create fake keymap file
@@ -42,8 +45,6 @@ RUN mkdir /usr/local/android-sdk/tools/keymaps && \
     touch /usr/local/android-sdk/tools/keymaps/en-us
 
 ENV NOTVISIBLE "in users profile"
-ENV ANDROID_PLATFORM "android-19"
-ENV ANDROID_ARCH "x86"
 
 # Add entrypoint
 ADD entrypoint.sh /entrypoint.sh
